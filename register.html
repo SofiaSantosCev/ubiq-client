@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>UBIQ - Register</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Sarabun:100,200,300,400,500,600,700,800" rel="stylesheet">
+</head>
+<body>
+	<img src="logo.png">
+<div id="main">
+
+	<h1>Register</h1>
+	<form id="form">
+		<input type="text" name="name" required id="name" placeholder="Name"> <br><br>
+		<input type="email" name="email" required id="email" placeholder="example@mail.com"><br><br>
+		<input type="password" name="password" required id="password" placeholder="Password"> <br>
+		<p>Do you already have an account?
+		<a href="login.html">Login</a></p>
+		<button id="button">Sign up</button>
+		<p id="error" class="hidden, error" ></p>
+	</form>
+</div>
+</body>
+<script type="text/javascript">
+
+    $("#formulario").submit(function(e) {
+    e.preventDefault();
+    });
+
+    $(document).ready(function() {
+
+
+
+      $('#button').click(function() {
+        var name = $("#name").val();
+        var email = $("#email").val();
+        var password = $("#password").val();
+           $.ajax({
+           type: "POST",
+           url: 'http://localhost:8888/ubiq/public/api/register',
+           data: {
+            'name':name,
+            'password':password,
+            'email':email                
+           },
+           success: function(response){
+
+              var token = response.token;
+              localStorage.setItem("token",token);
+              window.location = 'categories.html';
+
+           }  
+           ,
+           error: function(response){
+                console.log(response.responseJSON.text);           
+                $('#error').text(response.responseJSON.text);
+                $('#error').removeClass('hidden');
+           }
+       });
+     });
+
+      
+    });
+</script>
+</html>

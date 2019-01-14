@@ -1,0 +1,80 @@
+* {
+	font-family: 'Sarabun', sans-serif;
+}
+
+body {
+	background-image: url('elegant.jpeg');
+	background-size: cover;
+	text-align: center;
+	color: white;
+}
+
+img {
+	margin: auto;
+	width: 150px;
+	margin: 30px;
+}
+
+#main {
+	width: 55vh;
+	margin: auto;
+}
+
+form {
+	background-color: rgba(0,0,0,0.4);
+	width: 85%;
+	padding: 5vh;
+}
+
+input {
+	border-radius: 2px;
+	border: none;
+	background-color: rgb(255,255,255);
+	padding: 9px;
+	width: 80%;
+}
+
+input:hover {
+	background-color: rgba(255,255,255,0.8);
+}
+
+h1 {
+	font-size: 27px;
+	color: white;
+	text-align: left !important;
+	font-weight: 400;
+}
+
+a {
+	color: orange;
+	text-decoration: none;
+}
+
+a:hover {
+	color: grey;
+}
+
+button {
+	margin-top: 10px;
+	background-color: #FF6F0D;
+	border-radius: 20px;
+	border: none;
+	padding: 7px 40px;
+	font-size: 16px;
+	color: white;
+}
+
+button:hover {
+	background-color: grey;
+}
+.hidden {
+	visibility: hidden;
+}
+
+.error {
+	color: orange;
+}
+
+#main p, a {
+	font-weight: 100;
+}

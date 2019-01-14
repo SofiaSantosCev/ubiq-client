@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>LOGIN</title>
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Sarabun:100,200,300,400,500,600,700,800" rel="stylesheet">
+</head>
+	<img src="logo.png">
+	<div id="main">
+		<h1>Login</h1>
+		<form id="form">
+
+	    	<input type="email" placeholder="Enter Email" name="email" class="redondeado" required id="email"><br><br>
+	    	<input type="password" placeholder="Enter Password" class="redondeado" name="password" required id="password"> <br><br>
+	    	<a href="register.html">Register</a> <br>
+	    	<button id="button">Login</button>
+	    	<p id="error" class="hidden, error" ></p>
+			
+		</form>
+	</div>
+
+</body>
+
+<script type="text/javascript">
+	
+	$("#form").submit(function(e){
+		e.preventDefault();
+	});
+
+	$(document).ready(function(){
+
+		$('#button').click(function(){
+			
+			var email = $('#email').val();
+			var password = $("#password").val();
+			
+			$.ajax({
+				url:"http://localhost:8888/server/public/api/login",
+				type: "POST",
+
+				data:{
+					'email': email, 
+					'password': password
+				},
+
+				success: function(response){
+					console.log(response);
+					var token = response.token;
+					localStorage.setItem("token", token);
+					window.location = 'categories.html';
+				},
+				
+				error: function(response) {
+					console.log(response.responseJSON.text);
+					$('#error').text(response.responseJSON.text);
+					$('#error').removeClass('hidden');
+				}
+			});
+		}
+	});
+
+</script>
+</html>
