@@ -21,9 +21,9 @@ img {
 }
 
 form {
-	background-color: rgba(0,0,0,0.4);
 	width: 85%;
 	padding: 5vh;
+	margin: auto;
 }
 
 input {

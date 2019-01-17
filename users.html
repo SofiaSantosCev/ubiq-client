@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Users</title>
+		<link rel="stylesheet" type="text/css" href="main.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<link href="https://fonts.googleapis.com/css?family=Sarabun:100,200,300,400,500,600,700,800" rel="stylesheet">
+	</head>
+	<body>
+		<img src="logo.png">
+		<div id="main">
+		<h2>User controller</h2>
+		<form id="form">
+			<input type="text" placeholder="Name" name="name" required id="name"><br><br>
+			<input type="text" placeholder="Email" name="email" id="email"><br><br>
+			<input type="password" name="password" id="password" placeholder="password"><br><br>
+			<button onclick="create()" value="crear usuario">Crear</button>
+		</form>
+
+		<button onclick="CerrarSesion()">Log out</button>
+	</div>
+	</body>
+
+	<script type="text/javascript">
+		
+		$("#form").submit(function(e){
+			e.preventDefault();
+		});
+		var token = localStorage.getItem("token"); 
+		var name = document.getElementById("name").value;
+		//comprobar token
+
+		$.ajax({
+			url:"http://localhost:8888/ubiq/public/api/register",
+			type: "GET",
+
+			headers:{
+				'Authorization' : token
+			},
+
+			success: function(response){
+				var users = response.users;
+				var ids = response.ids;
+				//showUsers(users, ids);
+			},
+				
+			error: function() {
+				console.log("Error :(");
+			}
+		});
+
+		function create() { 
+			var name = $("#name").val();
+	        var email = $("#email").val();
+	        var password = $("#password").val();
+	           $.ajax({
+	           type: "POST",
+	           url: 'http://localhost:8888/ubiq/public/api/register',
+	           
+	           data: {
+	            'name':name,
+	            'password':password,
+	            'email':email                
+	           },
+	           success: function(response){
+
+	             console.log("Usuario creado", response.responseJSON)
+
+	           }  
+	           ,
+	           error: function(response){
+	                console.log(response.responseJSON);           
+	                $('#error').text(response.responseJSON);
+	                $('#error').removeClass('hidden');
+	           }
+	       });
+		}
+
+
+		/*function showUsers(locations, ids){ 
+			
+			for(var user in users) {
+				$('#usersList').append('<div class="user">'+users[user]+'<button id="usersbtn"' + ids[category]+'"onclick="deleteCategory('+ids[category]+')>Borrar</button></div><br>');
+			}
+		}*/
+
+		function CerrarSesion()
+		{
+			console.log("CerrarSesion");
+			localStorage.clear();
+			window.location = "http://localhost:8888/ubiq-client/login.html";  
+		}
+
+	</script>
+</html>
