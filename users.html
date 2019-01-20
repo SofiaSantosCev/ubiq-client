@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Users</title>
+		<title>UBIQ - Users controller</title>
+
+        <meta charset="UTF-8">
 		<link rel="stylesheet" type="text/css" href="main.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<link href="https://fonts.googleapis.com/css?family=Sarabun:100,200,300,400,500,600,700,800" rel="stylesheet">
 	</head>
 	<body>
 		<img src="logo.png">
-		<div id="main">
-		<h2>User controller</h2>
+		
 		<form id="form">
+			<h1>User controller</h1>
 			<input type="text" placeholder="Name" name="name" required id="name"><br><br>
 			<input type="text" placeholder="Email" name="email" id="email"><br><br>
 			<input type="password" name="password" id="password" placeholder="password"><br><br>
 			<button onclick="create()" value="crear usuario">Crear</button>
 		</form>
 
-		<button onclick="CerrarSesion()">Log out</button>
-	</div>
+		<button id="logout" onclick="CerrarSesion()">Log out</button>
+		<p id="error" class="hidden, error" ></p>
+		<div id="passwordsList"></div>
 	</body>
 
 	<script type="text/javascript">
@@ -26,15 +29,20 @@
 		$("#form").submit(function(e){
 			e.preventDefault();
 		});
+		if(!localStorage.getItem("token")){
+			window.location = "login.html";
+		}
+
 		var token = localStorage.getItem("token"); 
 		var name = document.getElementById("name").value;
 		//comprobar token
 
 		$.ajax({
-			url:"http://localhost:8888/ubiq/public/api/register",
+			url:"http://localhost:8888/ubiq/public/api/user",
 			type: "GET",
 
-			headers:{
+			headers:
+			{				
 				'Authorization' : token
 			},
 
@@ -42,6 +50,7 @@
 				var users = response.users;
 				var ids = response.ids;
 				//showUsers(users, ids);
+				loadUsersInForm(users, ids);
 			},
 				
 			error: function() {
@@ -76,7 +85,20 @@
 	       });
 		}
 
+		function showUsers(users, ids, names){
+			for(var user in users){
+				console.log(users[user]);
+				$('#usersList').append('<div class ="user" id="user' + ids[users]+)
+			}
+		}
 
+		function loadUsersInForm(users, IDs) {
+        
+        	for (var user in users) {            
+            
+            	$('.selectUsers').append('<option value='+IDs[user]+'>'+users[user]+'</option>');
+        	}    
+    	}
 		/*function showUsers(locations, ids){ 
 			
 			for(var user in users) {
