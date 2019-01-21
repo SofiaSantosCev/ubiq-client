@@ -20,8 +20,8 @@
 		</form>
 
 		<button id="logout" onclick="CerrarSesion()">Log out</button>
-		<p id="error" class="hidden, error" ></p>
-		<div id="passwordsList"></div>
+		<p id="error" class="hidden, error"></p>
+		<div id="usersList"></div>
 	</body>
 
 	<script type="text/javascript">
@@ -49,7 +49,7 @@
 			success: function(response){
 				var users = response.users;
 				var ids = response.ids;
-				//showUsers(users, ids);
+				showUsers(users, ids);
 				loadUsersInForm(users, ids);
 			},
 				
@@ -64,7 +64,7 @@
 	        var password = $("#password").val();
 	           $.ajax({
 	           type: "POST",
-	           url: 'http://localhost:8888/ubiq/public/api/register',
+	           url: 'http://localhost:8888/ubiq/public/api/user',
 	           
 	           data: {
 	            'name':name,
@@ -73,10 +73,9 @@
 	           },
 	           success: function(response){
 
-	             console.log("Usuario creado", response.responseJSON)
+	             console.log("Usuario creado", response.responseJSON);
+	           },
 
-	           }  
-	           ,
 	           error: function(response){
 	                console.log(response.responseJSON);           
 	                $('#error').text(response.responseJSON);
@@ -85,26 +84,27 @@
 	       });
 		}
 
-		function showUsers(users, ids, names){
+		/*function showUsers(users, ids, names){
 			for(var user in users){
 				console.log(users[user]);
 				$('#usersList').append('<div class ="user" id="user' + ids[users]+)
 			}
-		}
+		}*/
 
-		function loadUsersInForm(users, IDs) {
+		/*function loadUsersInForm(users, IDs) {
         
         	for (var user in users) {            
             
             	$('.selectUsers').append('<option value='+IDs[user]+'>'+users[user]+'</option>');
         	}    
-    	}
-		/*function showUsers(locations, ids){ 
+    	}*/
+
+		function showUsers(users, ids){ 
 			
 			for(var user in users) {
-				$('#usersList').append('<div class="user">'+users[user]+'<button id="usersbtn"' + ids[category]+'"onclick="deleteCategory('+ids[category]+')>Borrar</button></div><br>');
+				$('#usersList').append('<div>'+users[user]+'<button id="usersbtn"' + ids[user]+'"onclick="deleteUser('+ids[user]+')>Borrar</button></div><br>');
 			}
-		}*/
+		}
 
 		function CerrarSesion()
 		{
