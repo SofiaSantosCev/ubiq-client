@@ -10,7 +10,7 @@ body {
 }
 
 img {
-	width: 70px;
+	width: 100px;
 	margin: 30px;
 }
 
@@ -19,12 +19,23 @@ form {
 	margin: auto;
 }
 
-input {
+.login{
 	border-radius: 2px;
+	color: black;
 	border: none;
-	background-color: rgba(255,255,255, 0.8);
+	background-color: rgba(255,255,255, 0.9);
 	padding: 9px;
-	width: 80%;
+	width: 70%;
+
+}
+
+.users{
+	border-radius: 2px;
+	color: black;
+	border: none;
+	background-color: rgba(255,255,255, 0.9);
+	padding: 9px;
+	width: 50%;
 
 }
 
@@ -63,5 +74,5 @@ button:hover {
 }
 
 .error {
-	color: orange;
+	color: red;
 }

@@ -12,14 +12,14 @@
 		<img src="logo.png">
 		
 		<form id="form">
-			<h1>User controller</h1>
-			<input type="text" placeholder="Name" name="name" required id="name"><br><br>
-			<input type="text" placeholder="Email" name="email" id="email"><br><br>
-			<input type="password" name="password" id="password" placeholder="password"><br><br>
+    		<h1>User controller</h1>
+			<input type="text" placeholder="Name" name="name" required id="name" class="users"><br><br>
+			<input type="text" placeholder="Email" name="email" id="email" class="users"><br><br>
+			<input type="password" name="password" id="password" placeholder="password" class="users"><br><br>
 			<button onclick="create()" value="crear usuario">Crear</button>
 		</form>
 
-		<button id="logout" onclick="CerrarSesion()">Log out</button>
+		<button onclick="CerrarSesion()" id="cerrarSesion">Log out</button>
 		<p id="error" class="hidden, error"></p>
 		<div id="usersList"></div>
 	</body>
@@ -29,14 +29,19 @@
 		$("#form").submit(function(e){
 			e.preventDefault();
 		});
-		if(!localStorage.getItem("token")){
-			window.location = "login.html";
-		}
 
 		var token = localStorage.getItem("token"); 
 		var name = document.getElementById("name").value;
-		//comprobar token
 
+		if(!token){
+			window.location = "login.html";
+		}
+
+		if(token.role_id != 1){
+			window.location = "login.html";
+		}
+		
+		//comprobar token
 		$.ajax({
 			url:"http://localhost:8888/ubiq/public/api/user",
 			type: "GET",
@@ -71,36 +76,35 @@
 	            'password':password,
 	            'email':email                
 	           },
+	           
 	           success: function(response){
 
 	             console.log("Usuario creado", response.responseJSON);
 	           },
 
 	           error: function(response){
-	                console.log(response.responseJSON);           
+	           		console.log(response.responseJSON);          
 	                $('#error').text(response.responseJSON);
 	                $('#error').removeClass('hidden');
 	           }
 	       });
 		}
 
-		/*function showUsers(users, ids, names){
+		function showUsers(users, ids){
 			for(var user in users){
 				console.log(users[user]);
-				$('#usersList').append('<div class ="user" id="user' + ids[users]+)
+				$('#usersList').append('<div class ="user" id="user' + ids[users]);
 			}
-		}*/
+		}
 
 		/*function loadUsersInForm(users, IDs) {
         
         	for (var user in users) {            
-            
             	$('.selectUsers').append('<option value='+IDs[user]+'>'+users[user]+'</option>');
         	}    
     	}*/
 
 		function showUsers(users, ids){ 
-			
 			for(var user in users) {
 				$('#usersList').append('<div>'+users[user]+'<button id="usersbtn"' + ids[user]+'"onclick="deleteUser('+ids[user]+')>Borrar</button></div><br>');
 			}
