@@ -13,13 +13,15 @@
 		<form id="form" method="POST" class="container mt-5 text-white" style="width:30%">
 			<div class="form-group">
 				<label for="exampleInputEmail1">Email address</label>
-				<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+				<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="example@mail.com">
 			</div>
 			      
 	    	<div class="form-group">
 				<label for="exampleInputPassword1">Password</label>
 				<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+				<small id="passwordHelpInline" class="text-muted">Must be 8-20 characters long.</small>
 			</div>
+			<a>Forgot your password?</a>
 
 	    	<button type="submit" class="btn btn-primary rounded mx-auto d-block " id="button">Login</button>
 	    	<p id="error" class="hidden, error" ></p>
