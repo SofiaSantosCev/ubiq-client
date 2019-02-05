@@ -8,21 +8,23 @@
 	<link href="https://fonts.googleapis.com/css?family=Sarabun:100,200,300,400,500,600,700,800" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 </head>
-<body style="background: linear-gradient(to top, #2980b9, #2c3e50) fixed;">
-<!-- Nav bar -->
+<body style="background: linear-gradient(to bottom, #005c97, #363795) fixed;">
 
+<!-- Nav bar -->
 	<nav class="navbar bg-dark text-white">
-	  <p class="navbar-brand">
+	  <a class="navbar-brand">
 	    <img src="Logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
 	    User Controller
-	  </p>
-	  <a class=" my-2 my-sm-0" onclick="logOut()">Logout</a>
+	  </a>
+	  <a class="btn text-white my-2 my-sm-0" onclick="logOut()" href="login.html">Logout</a>
 	</nav>
 	<div class="container"></div>
 
 <!-- Form -->
 <div class="container d-flex justify-content-center mt-5 mb-5" style="border-radius: 10px">
+
 	<form id="form" style="width: 300px;" class="text-center">
+		<h4 class="text-white text-center mb-5">Create a new user</h4>
 		<div class="form-group">
 		    <input type="name" class="form-control" id="name" placeholder="Enter name">
   		</div>
@@ -51,7 +53,10 @@
 		<div class="form-group mx-sm-3 mb-2">
 		    <input type="password" class="form-control" id="newPassword" placeholder="New password">
 		</div>
-	  <button type="submit" class="btn btn-primary mb-2">Modify</button>
+		<div class="form-group mx-sm-3 mb-2">
+			<button type="submit" class="btn btn-primary mb-2">Modify</button>
+		</div>
+		
 	</form>
 </div>
 </body>
