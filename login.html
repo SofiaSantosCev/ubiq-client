@@ -6,8 +6,9 @@
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<link href="https://fonts.googleapis.com/css?family=Sarabun:100,200,300,400,500,600,700,800" rel="stylesheet">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 </head>
-<body style="background-image: url('elegant.jpeg')">
+<body style="background:linear-gradient(45deg, #005c97, #363795) fixed; ">
 	<img src="logo.png" class="rounded mx-auto d-block mt-5" style="width: 10%">
 		
 		<form id="form" method="POST" class="container mt-5 text-white" style="width:30%">
@@ -21,14 +22,12 @@
 				<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
 				<small id="passwordHelpInline" class="text-muted">Must be 8-20 characters long.</small>
 			</div>
-			<a>Forgot your password?</a>
-
-	    	<button type="submit" class="btn btn-primary rounded mx-auto d-block " id="button">Login</button>
+			<a class="rounded mx-auto d-block mb-5">Forgot your password?</a>
+     
+	    	<button type="submit" class="btn btn-warning rounded mx-auto d-block " id="button">Login</button>
 	    	<p id="error" class="hidden, error" ></p>
 			
-		</form>
-</body>
-
+		</form> 
 <script type="text/javascript">
 	
 	$("#form").submit(function(e){
