@@ -1,77 +1,158 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>UBIQ - Users controller</title>
+<head>
+	<title>UBIQ - Users controller</title>
 
-        <meta charset="UTF-8">
-		<link rel="stylesheet" type="text/css" href="main.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<link href="https://fonts.googleapis.com/css?family=Sarabun:100,200,300,400,500,600,700,800" rel="stylesheet">
-	</head>
-	<body>
-		<img src="logo.png">
-		
-		<form id="form">
-    		<h1>User controller</h1>
-			<input type="text" placeholder="Name" name="name" required id="name" class="users"><br><br>
-			<input type="text" placeholder="Email" name="email" id="email" class="users"><br><br>
-			<input type="password" name="password" id="password" placeholder="password" class="users"><br><br>
-			<button onclick="create()" value="crear usuario">Crear</button>
-		</form>
+    <meta charset="UTF-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Sarabun:100,200,300,400,500,600,700,800" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+</head>
+<body style="background: linear-gradient(to top, #2980b9, #2c3e50) fixed;">
+<!-- Nav bar -->
 
-		<button onclick="CerrarSesion()" id="cerrarSesion">Log out</button>
-		<p id="error" class="hidden, error"></p>
-		<div id="usersList"></div>
-	</body>
+	<nav class="navbar bg-dark text-white">
+	  <p class="navbar-brand">
+	    <img src="Logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+	    User Controller
+	  </p>
+	  <a class=" my-2 my-sm-0" onclick="logOut()">Logout</a>
+	</nav>
+	<div class="container"></div>
 
-	<script type="text/javascript">
-		
-		$("#form").submit(function(e){
-			e.preventDefault();
-		});
+<!-- Form -->
+<div class="container d-flex justify-content-center mt-5 mb-5" style="border-radius: 10px">
+	<form id="form" style="width: 300px;" class="text-center">
+		<div class="form-group">
+		    <input type="name" class="form-control" id="name" placeholder="Enter name">
+  		</div>
+		<div class="form-group">
+		    <input type="email" class="form-control" id="email" placeholder="Enter email">
+  		</div>
+  		<div class="form-group">
+		    <input type="password" class="form-control" id="password" placeholder="Enter password">
+  		</div>
+		<button onclick="create()" value="crear usuario" class="btn btn-primary">Crear</button>
+	</form>
+	<p id="error" class="hidden, error"></p>
+</div>
+	
 
-		var token = localStorage.getItem("token"); 
-		var name = document.getElementById("name").value;
+<!-- List --> 
+<div class="container" style="background-color: white">
+	<table id="usersList" class="table table-hover">
+	  <tbody></tbody>
+	</table>
 
-		if(!token){
-			window.location = "login.html";
+	<form class="form-inline" id="modifyingForm">
+		<div class="form-group mx-sm-3 mb-2">
+		    <input type="email" class="form-control" id="newEmail" placeholder="New email">
+	  	</div>
+		<div class="form-group mx-sm-3 mb-2">
+		    <input type="password" class="form-control" id="newPassword" placeholder="New password">
+		</div>
+	  <button type="submit" class="btn btn-primary mb-2">Modify</button>
+	</form>
+</div>
+</body>
+
+<!-- JS -->
+<script type="text/javascript">
+	
+	$("#form").submit(function(e){
+		e.preventDefault();
+	});
+
+	var token = localStorage.getItem("token"); 
+	var name = document.getElementById("name").value;
+
+	if(!token){
+		window.location = "login.html";
+	}
+
+	/*if(token.role_id != 1){
+		console.log(token.role_id);
+		window.location = "login.html";
+
+	}*/
+	
+	//comprobar token
+	$.ajax({
+		url:"http://localhost:8888/ubiq/public/api/user",
+		type: "GET",
+
+		headers:
+		{				
+			'Authorization' : token
+		},
+
+		success: function(response){
+			var users = response.users;
+			showUsers(users);
+		},
+			
+		error: function() {
+			console.log("Error :(");
+		}
+	});
+
+	function create() { 
+		var name = $("#name").val();
+        var email = $("#email").val();
+        var password = $("#password").val();
+        $.ajax({
+           type: "POST",
+           url: 'http://localhost:8888/ubiq/public/api/user',
+           
+           data: {
+            'name':name,
+            'password':password,
+            'email':email                
+           },
+           
+           success: function(response){
+
+             console.log("Usuario creado", response.responseJSON);
+           },
+
+           error: function(response){
+           		console.log(response.responseJSON);          
+                $('#error').text(response.responseJSON);
+                $('#error').removeClass('hidden');
+           }
+       });
+	}
+
+	function showUsers(users){
+		if(users == null){
+			$('#usersList').append('<div><p>Todavía no hay usuarios creados</p></div>')
 		}
 
-		/*if(token.role_id != 1){
-			console.log(token.role_id);
-			window.location = "login.html";
+		for(var user in users){
+			if()
+			$('#usersList').append('<tr><th scope="row">'+users[user].id+'</th><td>'+users[user].name+'</td><td>'+users[user].email+'</td><td><button onclick="modify()" class="btn btn-primary">Modify</button></td><td><button onclick="block()" class="btn btn-danger">Block</button></td></tr>');
+		}
+	}
 
-		}*/
+	function logOut()
+	{
+		console.log("Log out");
+		localStorage.clear();
+		window.location = "http://localhost:8888/ubiq-client/login.html";  
+	}
+
+	function block(){
+
+	}
+
+	function modify(){
+		var name = $("#name").val();
+	    	var email = $("#email").val();
+	    	var password = $("#password").val();
 		
-		//comprobar token
-		$.ajax({
-			url:"http://localhost:8888/ubiq/public/api/user",
-			type: "GET",
-
-			headers:
-			{				
-				'Authorization' : token
-			},
-
-			success: function(response){
-				var users = response.users;
-				var ids = response.ids;
-				showUsers(users, ids);
-				loadUsersInForm(users, ids);
-			},
-				
-			error: function() {
-				console.log("Error :(");
-			}
-		});
-
-		function create() { 
-			var name = $("#name").val();
-	        var email = $("#email").val();
-	        var password = $("#password").val();
-	           $.ajax({
-	           type: "POST",
-	           url: 'http://localhost:8888/ubiq/public/api/user',
+			$.ajax({
+	        	type: "PUT",
+	        	url: 'http://localhost:8888/ubiq/public/api/user/',
 	           
 	           data: {
 	            'name':name,
@@ -81,7 +162,7 @@
 	           
 	           success: function(response){
 
-	             console.log("Usuario creado", response.responseJSON);
+	             console.log("User modified", response.responseJSON);
 	           },
 
 	           error: function(response){
@@ -89,35 +170,8 @@
 	                $('#error').text(response.responseJSON);
 	                $('#error').removeClass('hidden');
 	           }
-	       });
-		}
+	       	});
+	}
 
-		function showUsers(users, ids){
-			for(var user in users){
-				console.log(users[user]);
-				$('#usersList').append('<div class ="user" id="user' + ids[users]);
-			}
-		}
-
-		/*function loadUsersInForm(users, IDs) {
-        
-        	for (var user in users) {            
-            	$('.selectUsers').append('<option value='+IDs[user]+'>'+users[user]+'</option>');
-        	}    
-    	}*/
-
-		function showUsers(users, ids){ 
-			for(var user in users) {
-				$('#usersList').append('<div>'+users[user]+'<button id="usersbtn"' + ids[user]+'"onclick="deleteUser('+ids[user]+')>Borrar</button></div><br>');
-			}
-		}
-
-		function CerrarSesion()
-		{
-			console.log("CerrarSesion");
-			localStorage.clear();
-			window.location = "http://localhost:8888/ubiq-client/login.html";  
-		}
-
-	</script>
+</script>
 </html>
