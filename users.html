@@ -1,64 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>UBIQ - Users controller</title>
+	<title>UBIQ - Admin panel</title>
 
     <meta charset="UTF-8">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<link href="https://fonts.googleapis.com/css?family=Sarabun:100,200,300,400,500,600,700,800" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 </head>
-<body style="background: linear-gradient(to bottom, #005c97, #363795) fixed;">
+<body style="background: linear-gradient(to top, #000428, #004e92) fixed;">
 
 <!-- Nav bar -->
 	<nav class="navbar bg-dark text-white">
 	  <a class="navbar-brand">
 	    <img src="Logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-	    User Controller
+	    Admin panel
 	  </a>
 	  <a class="btn text-white my-2 my-sm-0" onclick="logOut()" href="login.html">Logout</a>
 	</nav>
 	<div class="container"></div>
 
 <!-- Form -->
-<div class="container d-flex justify-content-center mt-5 mb-5" style="border-radius: 10px">
+	<div class="container d-flex justify-content-center mt-5 mb-5" style="border-radius: 10px">
 
-	<form id="form" style="width: 300px;" class="text-center">
-		<h4 class="text-white text-center mb-5">Create a new user</h4>
-		<div class="form-group">
-		    <input type="name" class="form-control" id="name" placeholder="Enter name">
-  		</div>
-		<div class="form-group">
-		    <input type="email" class="form-control" id="email" placeholder="Enter email">
-  		</div>
-  		<div class="form-group">
-		    <input type="password" class="form-control" id="password" placeholder="Enter password">
-  		</div>
-		<button onclick="create()" value="crear usuario" class="btn btn-primary">Crear</button>
-	</form>
-	<p id="error" class="hidden, error"></p>
-</div>
+		<form id="form" style="width: 300px;" class="text-center justify-content-center">
+			<h4 class="text-white text-center mb-5">Create a new user</h4>
+			<div class="form-group">
+			    <input type="name" class="form-control" id="name" placeholder="Enter name">
+	  		</div>
+			<div class="form-group">
+			    <input type="email" class="form-control" id="email" placeholder="Enter email">
+	  		</div>
+	  		<div class="form-group">
+			    <input type="password" class="form-control" id="password" placeholder="Enter password">
+	  		</div>
+			<button onclick="create()" value="crear usuario" class="btn btn-warning">Create</button>
+			<p id="error" class="hidden error text-center mt-5" style="color:red"></p>
+		</form>
+	</div>
 	
 
 <!-- List --> 
-<div class="container" style="background-color: white">
-	<table id="usersList" class="table table-hover">
-	  <tbody></tbody>
-	</table>
-
-	<form class="form-inline" id="modifyingForm">
-		<div class="form-group mx-sm-3 mb-2">
-		    <input type="email" class="form-control" id="newEmail" placeholder="New email">
-	  	</div>
-		<div class="form-group mx-sm-3 mb-2">
-		    <input type="password" class="form-control" id="newPassword" placeholder="New password">
+	<div class="container" data-spy="scroll">
+		<div class="row">
+			<div class="col">
+				<table id="usersList" class="table table-hover table-light" style="background-color: white" >
+			<thead class="thead-light">
+			    <tr >
+			      <th scope="col">id</th>
+			      <th scope="col">Name</th>
+			      <th scope="col">Email</th>
+			      <th scope="col"></th>
+			      <th scope="col"></th>
+			    </tr>
+		  </thead>
+		  <tbody></tbody>
+		</table>
+			</div>
+			<div class="col">
+				<div class="container">
+					
+					<form id="modifyingForm" style="width: 300px;" class="text-center justify-content-center">
+						
+					</form>
+				</div>
+			</div>
 		</div>
-		<div class="form-group mx-sm-3 mb-2">
-			<button type="submit" class="btn btn-primary mb-2">Modify</button>
-		</div>
-		
-	</form>
-</div>
+	</div>
 </body>
 
 <!-- JS -->
@@ -69,17 +77,12 @@
 	});
 
 	var token = localStorage.getItem("token"); 
+	var role_id = localStorage.getItem("role_id");
 	var name = document.getElementById("name").value;
 
-	if(!token){
+	if(role_id != 1){
 		window.location = "login.html";
 	}
-
-	/*if(token.role_id != 1){
-		console.log(token.role_id);
-		window.location = "login.html";
-
-	}*/
 	
 	//comprobar token
 	$.ajax({
@@ -112,7 +115,8 @@
            data: {
             'name':name,
             'password':password,
-            'email':email                
+            'email':email,
+            'rol_id':2                
            },
            
            success: function(response){
@@ -121,8 +125,8 @@
            },
 
            error: function(response){
-           		console.log(response.responseJSON);          
-                $('#error').text(response.responseJSON);
+           		console.log(response.responseJSON['message']);          
+                $('#error').text(response.responseJSON['message']);
                 $('#error').removeClass('hidden');
            }
        });
@@ -132,10 +136,9 @@
 		if(users == null){
 			$('#usersList').append('<div><p>Todavía no hay usuarios creados</p></div>')
 		}
-
+		console.log(users)
 		for(var user in users){
-			if()
-			$('#usersList').append('<tr><th scope="row">'+users[user].id+'</th><td>'+users[user].name+'</td><td>'+users[user].email+'</td><td><button onclick="modify()" class="btn btn-primary">Modify</button></td><td><button onclick="block()" class="btn btn-danger">Block</button></td></tr>');
+			$('#usersList').append('<tr><th scope="row">'+users[user].id+'</th><td>'+users[user].name+'</td><td>'+users[user].email+'</td><td><button onclick="fillModifyingForm('+users[user].id+', '+users[user].name+','+users[user].email+')" class="btn btn-primary">Modify</button></td><td><button onclick="block()" class="btn btn-danger">Block</button></td></tr>');
 		}
 	}
 
@@ -150,32 +153,38 @@
 
 	}
 
-	function modify(){
-		var name = $("#name").val();
-	    	var email = $("#email").val();
-	    	var password = $("#password").val();
+	function modify($id, $name, $email){		
+		$.ajax({
+        	type: "PUT",
+        	url: 'http://localhost:8888/ubiq/public/api/user/'+id,
+           
+           data: {
+            'name':$name,
+            'email':$email                
+           },
+           
+           success: function(response){
+             $('#error').text("User modified");
+             $('#error').removeClass('hidden');
+           },
+
+           error: function(response){        
+                $('#error').text(response.responseJSON['message']);
+                $('#error').removeClass('hidden');
+           }
+       	});
+	}
+
+	function fillModifyingForm($id, $name, $email){	
+
+		var newName = $("#newName").val();
+        var newEmail = $("#newEmail").val();
+		$('#modifyingForm').append('<h4 class="text-white text-center mb-5">Modifying form</h4><div class="form-group mx-sm-3 mb-2"><input type="name" class="form-control" id="newName" placeholder="New name" text="'+$name+'"></div><div class="form-group mx-sm-3 mb-2"><input type="email" class="form-control" id="newEmail" placeholder="New email" text="'+$email+'"></div><button type="submit" class="btn btn-primary mb-2" onclick="modify('+$id+', '+$Newname+','+newEmail+')">Modify</button><p id="error" class="hidden error text-center mt-5" style="color:red"></p>');
+
 		
-			$.ajax({
-	        	type: "PUT",
-	        	url: 'http://localhost:8888/ubiq/public/api/user/',
-	           
-	           data: {
-	            'name':name,
-	            'password':password,
-	            'email':email                
-	           },
-	           
-	           success: function(response){
 
-	             console.log("User modified", response.responseJSON);
-	           },
+		modify($id, $newName, $newEmail);
 
-	           error: function(response){
-	           		console.log(response.responseJSON);          
-	                $('#error').text(response.responseJSON);
-	                $('#error').removeClass('hidden');
-	           }
-	       	});
 	}
 
 </script>

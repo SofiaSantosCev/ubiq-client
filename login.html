@@ -8,27 +8,28 @@
 	<link href="https://fonts.googleapis.com/css?family=Sarabun:100,200,300,400,500,600,700,800" rel="stylesheet">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 </head>
-<body style="background: linear-gradient(45deg, #005c97, #363795) fixed;">
+<body style="background: linear-gradient(to top, #000428, #004e92) fixed;">
 
 	<img src="logo.png" class="rounded mx-auto d-block mt-5" style="width: 5%">
 		
 		<form id="form" method="POST" class="container mt-5 text-white" style="width:30%">
 			<div class="form-group">
 				<label for="Email">Email address</label>
-				<input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="example@mail.com">
+				<input type="email" class="form-control" id="email" aria-describedby="emailHelp">
 			</div>
 			      
 	    	<div class="form-group">
 				<label for="Password">Password</label>
-				<input type="password" class="form-control" id="password" placeholder="Password">
-				<small id="passwordHelpInline" class="text-muted">Must be 8-20 characters long.</small>
+				<input type="password" class="form-control" id="password">
+				<small id="passwordHelpInline" class="text-muted text-white">Must be 8-20 characters long.</small>
 			</div>
 			<a class="rounded mx-auto d-block mb-5 text-center text-white" href="recovery.html">Forgot your password?</a>
      
 	    	<button type="submit" class="btn rounded mx-auto d-block " id="button" style="border-radius: 20px; background-color: orange; padding: 5px 30px;">Login</button>
-	    	<p id="error" class="hidden, error" ></p>
-			
+	    	<p id="error" class="hidden error text-center mt-5" style="color:red"></p>
 		</form> 
+
+	</body>
 <script type="text/javascript">
 	
 	$("#form").submit(function(e){
@@ -54,19 +55,22 @@
 				success: function(response){
 					console.log(response);
 					var token = response.token;
+					var role_id = response.role_id;
 					localStorage.setItem("token", token);
+					localStorage.setItem("role_id", role_id);
 
-					if (token.role_id == 1){
-						window.location = 'login.html';
+					if (role_id == 1){
+						console.log(role_id)
+						window.location = 'users.html';
+					} else if (role_id == 2){
+						$('#error').text("You have to be an admin user");
+						$('#error').removeClass('hidden');
 					}
-
-					window.location = 'users.html';
-
 				},
 				
 				error: function(response) {
-					console.log(response.responseJSON);
-					$('#error').text(response.responseJSON);
+					console.log(response.responseJSON['message']);
+					$('#error').text(response.responseJSON['message']);
 					$('#error').removeClass('hidden');
 				}
 			});
