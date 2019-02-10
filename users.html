@@ -29,7 +29,7 @@
 			    <input type="name" class="form-control" id="name" placeholder="Enter name">
 	  		</div>
 			<div class="form-group">
-			    <input type="email" class="form-control" id="email" placeholder="Enter email">
+				<input type="email" class="form-control" id="email" placeholder="Enter email">
 	  		</div>
 	  		<div class="form-group">
 			    <input type="password" class="form-control" id="password" placeholder="Enter password">
@@ -41,31 +41,22 @@
 	
 
 <!-- List --> 
-	<div class="container" data-spy="scroll">
-		<div class="row">
-			<div class="col">
-				<table id="usersList" class="table table-hover table-light" style="background-color: white" >
+	<div class="container">
+		<table id="usersList" class="table table-hover table-light" style="background-color: white" >
 			<thead class="thead-light">
-			    <tr >
-			      <th scope="col">id</th>
-			      <th scope="col">Name</th>
-			      <th scope="col">Email</th>
-			      <th scope="col"></th>
-			      <th scope="col"></th>
-			    </tr>
-		  </thead>
-		  <tbody></tbody>
+				<tr>
+					<th scope="col">id</th>
+					<th scope="col">Name</th>
+					<th scope="col">Email</th>
+					<th scope="col">New name</th>
+					<th scope="col">New Mail</th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- Filas de usuarios  -->
+			</tbody>
 		</table>
-			</div>
-			<div class="col">
-				<div class="container">
-					
-					<form id="modifyingForm" style="width: 300px;" class="text-center justify-content-center">
-						
-					</form>
-				</div>
-			</div>
-		</div>
 	</div>
 </body>
 
@@ -104,32 +95,33 @@
 		}
 	});
 
+//Crear nuevos usuarios
 	function create() { 
 		var name = $("#name").val();
-        var email = $("#email").val();
-        var password = $("#password").val();
-        $.ajax({
-           type: "POST",
-           url: 'http://localhost:8888/ubiq/public/api/user',
-           
-           data: {
-            'name':name,
-            'password':password,
-            'email':email,
-            'rol_id':2                
-           },
-           
-           success: function(response){
+		var email = $("#email").val();
+		var password = $("#password").val();
+		$.ajax({
+			type: "POST",
+			url: 'http://localhost:8888/ubiq/public/api/user',
+			
+			data: {
+			'name':name,
+			'password':password,
+			'email':email,
+			'rol_id':2                
+			},
+			
+			success: function(response){
 
-             console.log("Usuario creado", response.responseJSON);
-           },
+				console.log("Usuario creado", response.responseJSON);
+			},
 
-           error: function(response){
-           		console.log(response.responseJSON['message']);          
-                $('#error').text(response.responseJSON['message']);
-                $('#error').removeClass('hidden');
-           }
-       });
+			error: function(response){
+				console.log(response.responseJSON['message']);          
+					$('#error').text(response.responseJSON['message']);
+					$('#error').removeClass('hidden');
+			}
+		});
 	}
 
 	function showUsers(users){
@@ -138,53 +130,59 @@
 		}
 		console.log(users)
 		for(var user in users){
-			$('#usersList').append('<tr><th scope="row">'+users[user].id+'</th><td>'+users[user].name+'</td><td>'+users[user].email+'</td><td><button onclick="fillModifyingForm('+users[user].id+', '+users[user].name+','+users[user].email+')" class="btn btn-primary">Modify</button></td><td><button onclick="block()" class="btn btn-danger">Block</button></td></tr>');
+			$('#usersList').append('<tr><th scope="row">'+users[user].id+'</th><td>'+users[user].name+'</td><td>'+users[user].email+'</td><td><button onclick="block()" class="btn btn-danger">Block</button></td><td><input type="Name" class="form-control" id="newName" placeholder='+users[user].name+' name="new Name"></td><td><input type="email" class="form-control" id="newMail" placeholder="'+users[user].email+'" name="new Email"></td><td><button onclick="modify('+users[user].id+')" class="btn btn-primary">Modify</button></td></tr>');
 		}
 	}
 
+//cerrar sesion
 	function logOut()
 	{
-		console.log("Log out");
 		localStorage.clear();
 		window.location = "http://localhost:8888/ubiq-client/login.html";  
 	}
 
-	function block(){
-
-	}
-
-	function modify($id, $name, $email){		
+//Bloquear usuarios
+	function block($id){
 		$.ajax({
-        	type: "PUT",
-        	url: 'http://localhost:8888/ubiq/public/api/user/'+id,
-           
-           data: {
-            'name':$name,
-            'email':$email                
-           },
-           
-           success: function(response){
-             $('#error').text("User modified");
-             $('#error').removeClass('hidden');
-           },
+			type: "PUT",
+			url: 'http://localhost:8888/ubiq/public/api/banned/'+id,
+			
+			success: function(response){
+				$('#error').text("User banned");
+				$('#error').removeClass('hidden');
+			},
 
-           error: function(response){        
-                $('#error').text(response.responseJSON['message']);
-                $('#error').removeClass('hidden');
-           }
-       	});
+			error: function(response){        
+					$('#error').text(response.responseJSON['message']);
+					$('#error').removeClass('hidden');
+			}
+		});
 	}
 
-	function fillModifyingForm($id, $name, $email){	
-
-		var newName = $("#newName").val();
-        var newEmail = $("#newEmail").val();
-		$('#modifyingForm').append('<h4 class="text-white text-center mb-5">Modifying form</h4><div class="form-group mx-sm-3 mb-2"><input type="name" class="form-control" id="newName" placeholder="New name" text="'+$name+'"></div><div class="form-group mx-sm-3 mb-2"><input type="email" class="form-control" id="newEmail" placeholder="New email" text="'+$email+'"></div><button type="submit" class="btn btn-primary mb-2" onclick="modify('+$id+', '+$Newname+','+newEmail+')">Modify</button><p id="error" class="hidden error text-center mt-5" style="color:red"></p>');
-
+//Modificar datos de usuario
+	function modify($id) {
+		var newName = $('#newName').val();
+		var newEmail = $('#newEmail').val();		
 		
+		$.ajax({
+			type: "PUT",
+			url: 'http://localhost:8888/ubiq/public/api/user/'+id,
+	
+			data: {
+			'name':$name,
+			'email':$Newemail                
+			},
+			
+			success: function(response){
+				$('#error').text("User modified");
+				$('#error').removeClass('hidden');
+			},
 
-		modify($id, $newName, $newEmail);
-
+			error: function(response){        
+					$('#error').text(response.responseJSON['message']);
+					$('#error').removeClass('hidden');
+			}
+    });
 	}
 
 </script>
