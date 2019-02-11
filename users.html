@@ -88,6 +88,8 @@
 		success: function(response){
 			var users = response.users;
 			showUsers(users);
+
+			
 		},
 			
 		error: function() {
@@ -138,11 +140,15 @@
 		}
 		
 		for(var user in users){
-			$('#usersList').append('<tr><th scope="row">'+users[user].id+'</th><td>'+users[user].name+'</td><td>'+users[user].email+'</td><td><input type="text" class="form-control" id="newName'+users[user].id+'" value='+users[user].name+'></td><td><input type="email" class="form-control" id="newEmail'+users[user].id+'" value="'+users[user].email+'"></td><td><button onclick="modify('+users[user].id+')" class="btn btn-primary">Modify</button></td><td><button onclick="block('+users[user].id+')" class="btn">Block / Desblock</button></td></tr>');
-			console.log(users[user].id);
-			console.log(users[user].name);
-			console.log(users[user].email);
-
+			$('#usersList').append('<tr><th scope="row">'+users[user].id+'</th><td>'+users[user].name+'</td><td>'+users[user].email+'</td><td><input type="text" class="form-control" id="newName'+users[user].id+'" value='+users[user].name+'></td><td><input type="email" class="form-control" id="newEmail'+users[user].id+'" value="'+users[user].email+'"></td><td><button  id="modifyButton" onclick="modify('+users[user].id+')" class="btn btn-primary">Modify</button></td><td><button id="blockButton'+users[user].id+'" onclick="block('+users[user].id+')" class="btn">Block / Desblock</button></td></tr>');
+		
+			if (users[user].banned == true){
+					$('#blockButton'+users[user].id).addClass("btn-warning");
+					$('#blockButton'+users[user].id).text("desblock");
+				} else {
+					$('#blockButton'+users[user].id).addClass("btn-danger");
+					$('#blockButton'+users[user].id).text("block");
+				}
 		}
 	}
 
@@ -166,9 +172,7 @@
 			},
 
 			success: function(response){
-				console.log(response.message);          
-				$('#error').text(response.message);
-				$('#error').removeClass('hidden');
+				location.reload();
 			},
 
 			error: function(response){        
@@ -200,12 +204,13 @@
 			},
 			
 			success: function(response){
+				
 				location.reload();
 			},
 
 			error: function(response){        
-					$('#error').text(response.responseJSON['message']);
-					$('#error').removeClass('hidden');
+				$('#error').text(response.responseJSON['message']);
+				$('#error').removeClass('hidden');
 			}
     	});
 	}
